@@ -1,0 +1,923 @@
+name: META
+tables:
+  - name: DISTRIBUTION_CENTERS
+    description: "The table contains records identifying distribution centers. Each record provides a distribution center’s name and geographic coordinates, including latitude and longitude."
+    base_table:
+      database: LOOKER
+      schema: AI
+      table: DISTRIBUTION_CENTERS
+    primary_key:
+      columns:
+        - ID
+    dimensions:
+      - name: ID
+        expr: ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "1"
+          - "2"
+          - "3"
+      - name: NAME
+        expr: NAME
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Memphis TN
+          - Chicago IL
+          - Houston TX
+    facts:
+      - name: LATITUDE
+        expr: LATITUDE
+        data_type: "NUMBER(38,4)"
+        access_modifier: public_access
+        sample_values:
+          - "35.1174"
+          - "41.8369"
+          - "29.7604"
+      - name: LONGITUDE
+        expr: LONGITUDE
+        data_type: "NUMBER(38,4)"
+        access_modifier: public_access
+        sample_values:
+          - "-89.9711"
+          - "-87.6847"
+          - "-95.3698"
+  - name: EVENTS
+    description: "The table contains records of web and application activity events captured during user sessions. Each record represents an event instance with its timing and context, including user identity, session grouping, client/network and location information, request details, and categorization by event type and traffic source."
+    base_table:
+      database: LOOKER
+      schema: AI
+      table: EVENTS
+    primary_key:
+      columns:
+        - ID
+    dimensions:
+      - name: BROWSER
+        expr: BROWSER
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - IE
+          - Other
+          - Safari
+      - name: CITY
+        expr: CITY
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Chifeng
+          - Chengdu
+          - Tianshui
+      - name: EVENT_TYPE
+        expr: EVENT_TYPE
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - home
+          - department
+          - product
+      - name: ID
+        expr: ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "734003"
+          - "1522592"
+          - "1585234"
+      - name: IP_ADDRESS
+        expr: IP_ADDRESS
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - 209.46.39.95
+          - 156.250.191.251
+          - 68.1.110.38
+      - name: POSTAL_CODE
+        expr: POSTAL_CODE
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - "515559"
+          - "57701"
+          - "518102"
+      - name: SEQUENCE_NUMBER
+        expr: SEQUENCE_NUMBER
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "2"
+          - "1"
+          - "4"
+      - name: SESSION_ID
+        expr: SESSION_ID
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - 5169f2e3-99fe-4bfd-a4dd-23636c1e4e8d
+          - 891365b5-3fda-49b1-97f1-0966c3e264a4
+          - 1302991a-c6c8-4cc8-832e-25dd07ad04b0
+      - name: STATE
+        expr: STATE
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Hainan
+          - Louisiana
+          - Guangxi Zhuang Autonomous Region
+      - name: TRAFFIC_SOURCE
+        expr: TRAFFIC_SOURCE
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - YouTube
+          - Organic
+          - Facebook
+      - name: URI
+        expr: URI
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - /department/men/category/tops&tees/brand/nextlevel
+          - /product/5801
+          - /product/1104
+      - name: USER_ID
+        expr: USER_ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "49317"
+          - "16426"
+    time_dimensions:
+      - name: CREATED_AT
+        expr: CREATED_AT
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1598202180.000000000"
+          - "1651379460.000000000"
+          - "1596789660.000000000"
+    foreign_keys:
+      - fkey_columns:
+          - USER_ID
+        pkey_table:
+          database: LOOKER
+          schema: AI
+          table: USERS
+        pkey_columns:
+          - ID
+  - name: INVENTORY_ITEMS
+    description: "The table contains records of inventory items tied to sellable products, capturing their lifecycle and key commercial details. Each record includes product identification and categorization (such as name, brand, SKU, category, and department), pricing and cost, timestamps for when the item was created and sold, and the distribution center responsible for fulfillment."
+    base_table:
+      database: LOOKER
+      schema: AI
+      table: INVENTORY_ITEMS
+    primary_key:
+      columns:
+        - ID
+    dimensions:
+      - name: ID
+        expr: ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "67971"
+          - "67972"
+          - "67973"
+      - name: PRODUCT_BRAND
+        expr: PRODUCT_BRAND
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Funny Girl Designs
+          - Perry
+          - Belts.com
+      - name: PRODUCT_CATEGORY
+        expr: PRODUCT_CATEGORY
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Active
+          - Blazers & Jackets
+          - Accessories
+      - name: PRODUCT_DEPARTMENT
+        expr: PRODUCT_DEPARTMENT
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Men
+          - Women
+      - name: PRODUCT_DISTRIBUTION_CENTER_ID
+        expr: PRODUCT_DISTRIBUTION_CENTER_ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "7"
+          - "1"
+          - "8"
+      - name: PRODUCT_ID
+        expr: PRODUCT_ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "21537"
+          - "21202"
+          - "20536"
+      - name: PRODUCT_NAME
+        expr: PRODUCT_NAME
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Antique Rivet Men's Ken Jean
+          - Armani Collezioni BLUE Cotton Jeans
+          - Antique Rivet Men's Grayer Back Pocket Jean
+      - name: PRODUCT_SKU
+        expr: PRODUCT_SKU
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - 2A3E953A5E3D81E67945BCE5519F84C8
+          - 8EFA9015A4EF4632A954E820ECA834AD
+          - 82D1C46A6014199790E16EAD8A170B98
+    facts:
+      - name: COST
+        expr: COST
+        data_type: "NUMBER(38,16)"
+        access_modifier: public_access
+        sample_values:
+          - "12.6736599216127400"
+          - "9.2400000337511300"
+          - "13.7626505264438720"
+      - name: PRODUCT_RETAIL_PRICE
+        expr: PRODUCT_RETAIL_PRICE
+        data_type: "NUMBER(38,16)"
+        access_modifier: public_access
+        sample_values:
+          - "32.5600013732910160"
+          - "38.9900016784668000"
+          - "12.8000001907348630"
+    time_dimensions:
+      - name: CREATED_AT
+        expr: CREATED_AT
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1656745760.000000000"
+          - "1685847180.000000000"
+          - "1634425132.000000000"
+      - name: SOLD_AT
+        expr: SOLD_AT
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1658644400.000000000"
+          - "1597881854.000000000"
+    foreign_keys:
+      - fkey_columns:
+          - PRODUCT_DISTRIBUTION_CENTER_ID
+        pkey_table:
+          database: LOOKER
+          schema: AI
+          table: DISTRIBUTION_CENTERS
+        pkey_columns:
+          - ID
+      - fkey_columns:
+          - PRODUCT_ID
+        pkey_table:
+          database: LOOKER
+          schema: AI
+          table: PRODUCTS
+        pkey_columns:
+          - ID
+  - name: ORDERS
+    description: "The table contains records of customer order activity, including order lifecycle timestamps and the total number of items. Each record represents a single order and includes identifiers for the order and user, the current fulfillment status, customer demographic information, and dates for shipping, delivery, and returns."
+    base_table:
+      database: LOOKER
+      schema: AI
+      table: ORDERS
+    primary_key:
+      columns:
+        - ORDER_ID
+    dimensions:
+      - name: GENDER
+        expr: GENDER
+        data_type: BOOLEAN
+        access_modifier: public_access
+        sample_values:
+          - "0"
+      - name: NUM_OF_ITEM
+        expr: NUM_OF_ITEM
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "3"
+          - "1"
+          - "2"
+      - name: ORDER_ID
+        expr: ORDER_ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "8"
+          - "60"
+          - "64"
+      - name: RETURNED_AT
+        expr: RETURNED_AT
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - 2024-01-16 21:15:00+00:00
+          - 2023-07-13 13:41:00+00:00
+      - name: STATUS
+        expr: STATUS
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Cancelled
+          - Complete
+          - Processing
+      - name: USER_ID
+        expr: USER_ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "5"
+          - "44"
+          - "46"
+    time_dimensions:
+      - name: CREATED_AT
+        expr: CREATED_AT
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1666260180.000000000"
+          - "1674180720.000000000"
+          - "1638781860.000000000"
+      - name: DELIVERED_AT
+        expr: DELIVERED_AT
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1666272240.000000000"
+          - "1700710560.000000000"
+      - name: SHIPPED_AT
+        expr: SHIPPED_AT
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1666139760.000000000"
+          - "1700534940.000000000"
+    foreign_keys:
+      - fkey_columns:
+          - USER_ID
+        pkey_table:
+          database: LOOKER
+          schema: AI
+          table: USERS
+        pkey_columns:
+          - ID
+  - name: ORDER_ITEMS
+    description: "The table contains records of individual order line items and their lifecycle from creation through fulfillment and returns. Each record associates a purchase line to an order and user, specifies the product and related inventory reference, tracks fulfillment status and key timestamps, and includes the sale price for the item."
+    base_table:
+      database: LOOKER
+      schema: AI
+      table: ORDER_ITEMS
+    primary_key:
+      columns:
+        - ID
+        - INVENTORY_ITEM_ID
+    dimensions:
+      - name: ID
+        expr: ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "152013"
+          - "40993"
+          - "113652"
+      - name: INVENTORY_ITEM_ID
+        expr: INVENTORY_ITEM_ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "410368"
+          - "110590"
+          - "138236"
+      - name: ORDER_ID
+        expr: ORDER_ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "104663"
+          - "28204"
+          - "35223"
+      - name: PRODUCT_ID
+        expr: PRODUCT_ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "14235"
+          - "14159"
+          - "14202"
+      - name: STATUS
+        expr: STATUS
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Cancelled
+          - Complete
+          - Shipped
+      - name: USER_ID
+        expr: USER_ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "83582"
+          - "22551"
+          - "28215"
+    facts:
+      - name: SALE_PRICE
+        expr: SALE_PRICE
+        data_type: "NUMBER(38,16)"
+        access_modifier: public_access
+        sample_values:
+          - "0.0199999995529651"
+          - "0.4900000095367431"
+          - "1.5000000000000000"
+    time_dimensions:
+      - name: CREATED_AT
+        expr: CREATED_AT
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1683439720.000000000"
+          - "1678765641.000000000"
+          - "1701782730.000000000"
+      - name: DELIVERED_AT
+        expr: DELIVERED_AT
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1702202640.000000000"
+          - "1648937880.000000000"
+      - name: RETURNED_AT
+        expr: RETURNED_AT
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1697501280.000000000"
+          - "1705585980.000000000"
+      - name: SHIPPED_AT
+        expr: SHIPPED_AT
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1678921020.000000000"
+          - "1701825600.000000000"
+    foreign_keys:
+      - fkey_columns:
+          - INVENTORY_ITEM_ID
+        pkey_table:
+          database: LOOKER
+          schema: AI
+          table: INVENTORY_ITEMS
+        pkey_columns:
+          - ID
+      - fkey_columns:
+          - ORDER_ID
+        pkey_table:
+          database: LOOKER
+          schema: AI
+          table: ORDERS
+        pkey_columns:
+          - ORDER_ID
+      - fkey_columns:
+          - PRODUCT_ID
+        pkey_table:
+          database: LOOKER
+          schema: AI
+          table: PRODUCTS
+        pkey_columns:
+          - ID
+      - fkey_columns:
+          - USER_ID
+        pkey_table:
+          database: LOOKER
+          schema: AI
+          table: USERS
+        pkey_columns:
+          - ID
+  - name: PRODUCTS
+    description: "The table contains product master data for individual items. Each record describes a product’s identity and attributes including naming, branding, cost and retail pricing, categorical and departmental classification, stock keeping identifiers, and distribution center association."
+    base_table:
+      database: LOOKER
+      schema: AI
+      table: PRODUCTS
+    primary_key:
+      columns:
+        - ID
+    dimensions:
+      - name: BRAND
+        expr: BRAND
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - MG
+          - MW
+          - 2XU
+      - name: CATEGORY
+        expr: CATEGORY
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Accessories
+          - Plus
+          - Swim
+      - name: DEPARTMENT
+        expr: DEPARTMENT
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Women
+          - Men
+      - name: DISTRIBUTION_CENTER_ID
+        expr: DISTRIBUTION_CENTER_ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "1"
+          - "2"
+          - "3"
+      - name: ID
+        expr: ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "13842"
+          - "13928"
+          - "14115"
+      - name: NAME
+        expr: NAME
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Low Profile Dyed Cotton Twill Cap - Navy W39S55D
+          - Low Profile Dyed Cotton Twill Cap - Putty W39S55D
+          - Enzyme Regular Solid Army Caps-Black W35S45D
+      - name: SKU
+        expr: SKU
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - EBD58B8A3F1D72F4206201DA62FB1204
+          - 2EAC42424D12436BDD6A5B8A88480CC3
+          - 63894CE404B8C652915C41EF8B879D20
+    facts:
+      - name: COST
+        expr: COST
+        data_type: "NUMBER(38,16)"
+        access_modifier: public_access
+        sample_values:
+          - "2.5187499908497560"
+          - "2.3383499148894105"
+          - "4.8795598793798690"
+      - name: RETAIL_PRICE
+        expr: RETAIL_PRICE
+        data_type: "NUMBER(38,16)"
+        access_modifier: public_access
+        sample_values:
+          - "6.2500000000000000"
+          - "5.9499998092651370"
+          - "10.9899997711181640"
+    foreign_keys:
+      - fkey_columns:
+          - DISTRIBUTION_CENTER_ID
+        pkey_table:
+          database: LOOKER
+          schema: AI
+          table: DISTRIBUTION_CENTERS
+        pkey_columns:
+          - ID
+  - name: USERS
+    description: "The table contains records of individual user profiles. Each record covers personal identity and contact information, demographic attributes, geographic address and coordinates, the user acquisition channel, and the record creation timestamp."
+    base_table:
+      database: LOOKER
+      schema: AI
+      table: USERS
+    primary_key:
+      columns:
+        - ID
+    dimensions:
+      - name: AGE
+        expr: AGE
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "65"
+          - "34"
+          - "13"
+      - name: CITY
+        expr: CITY
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Rio Branco
+          - Sena Madureira
+          - Tarauacá
+      - name: COUNTRY
+        expr: COUNTRY
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Brasil
+          - Japan
+          - United States
+      - name: EMAIL
+        expr: EMAIL
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - timothybush@example.net
+          - elizabethmartinez@example.com
+          - christophermendoza@example.net
+      - name: FIRST_NAME
+        expr: FIRST_NAME
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Timothy
+          - Elizabeth
+          - Christopher
+      - name: GENDER
+        expr: GENDER
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - M
+          - F
+      - name: ID
+        expr: ID
+        data_type: "NUMBER(38,0)"
+        access_modifier: public_access
+        sample_values:
+          - "457"
+          - "36280"
+          - "60193"
+      - name: LAST_NAME
+        expr: LAST_NAME
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Bush
+          - Martinez
+          - Mendoza
+      - name: POSTAL_CODE
+        expr: POSTAL_CODE
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - 69917-400
+          - 69940-000
+          - 69970-000
+      - name: STATE
+        expr: STATE
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Acre
+          - Aichi
+          - Akita
+      - name: STREET_ADDRESS
+        expr: STREET_ADDRESS
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - 87620 Johnson Hills
+          - 1705 Nielsen Land
+          - 125 Turner Isle Apt. 264
+      - name: TRAFFIC_SOURCE
+        expr: TRAFFIC_SOURCE
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        sample_values:
+          - Search
+          - Email
+          - Organic
+    facts:
+      - name: LATITUDE
+        expr: LATITUDE
+        data_type: "NUMBER(38,12)"
+        access_modifier: public_access
+        sample_values:
+          - "-9.945567619000"
+          - "-9.857324143000"
+          - "-8.325245103000"
+      - name: LONGITUDE
+        expr: LONGITUDE
+        data_type: "NUMBER(38,11)"
+        access_modifier: public_access
+        sample_values:
+          - "-67.83560991000"
+          - "-69.43705740000"
+          - "-71.55302951000"
+    time_dimensions:
+      - name: CREATED_AT
+        expr: CREATED_AT
+        data_type: TIMESTAMP_NTZ(9)
+        access_modifier: public_access
+        sample_values:
+          - "1658238660.000000000"
+          - "1699469340.000000000"
+          - "1566627000.000000000"
+relationships:
+  - name: EVENTS_TO_USERS
+    left_table: EVENTS
+    right_table: USERS
+    relationship_columns:
+      - left_column: USER_ID
+        right_column: ID
+    relationship_type: many_to_one
+    join_type: inner
+  - name: INVENTORY_ITEMS_TO_DISTRIBUTION_CENTERS
+    left_table: INVENTORY_ITEMS
+    right_table: DISTRIBUTION_CENTERS
+    relationship_columns:
+      - left_column: PRODUCT_DISTRIBUTION_CENTER_ID
+        right_column: ID
+    relationship_type: many_to_one
+    join_type: inner
+  - name: INVENTORY_ITEMS_TO_PRODUCTS
+    left_table: INVENTORY_ITEMS
+    right_table: PRODUCTS
+    relationship_columns:
+      - left_column: PRODUCT_ID
+        right_column: ID
+    relationship_type: many_to_one
+    join_type: inner
+  - name: ORDERS_TO_USERS
+    left_table: ORDERS
+    right_table: USERS
+    relationship_columns:
+      - left_column: USER_ID
+        right_column: ID
+    relationship_type: many_to_one
+    join_type: inner
+  - name: ORDER_ITEMS_TO_INVENTORY_ITEMS
+    left_table: ORDER_ITEMS
+    right_table: INVENTORY_ITEMS
+    relationship_columns:
+      - left_column: INVENTORY_ITEM_ID
+        right_column: ID
+    relationship_type: many_to_one
+    join_type: inner
+  - name: ORDER_ITEMS_TO_ORDERS
+    left_table: ORDER_ITEMS
+    right_table: ORDERS
+    relationship_columns:
+      - left_column: ORDER_ID
+        right_column: ORDER_ID
+    relationship_type: many_to_one
+    join_type: inner
+  - name: ORDER_ITEMS_TO_PRODUCTS
+    left_table: ORDER_ITEMS
+    right_table: PRODUCTS
+    relationship_columns:
+      - left_column: PRODUCT_ID
+        right_column: ID
+    relationship_type: many_to_one
+    join_type: inner
+  - name: ORDER_ITEMS_TO_USERS
+    left_table: ORDER_ITEMS
+    right_table: USERS
+    relationship_columns:
+      - left_column: USER_ID
+        right_column: ID
+    relationship_type: many_to_one
+    join_type: inner
+  - name: PRODUCTS_TO_DISTRIBUTION_CENTERS
+    left_table: PRODUCTS
+    right_table: DISTRIBUTION_CENTERS
+    relationship_columns:
+      - left_column: DISTRIBUTION_CENTER_ID
+        right_column: ID
+    relationship_type: many_to_one
+    join_type: inner
+verified_queries:
+  - name: "\"Which 10 products have been purchased the most, and when was each first and last ordered?\""
+    sql: |-
+      SELECT
+        oi.product_id,
+        p.name AS product_name,
+        COUNT(oi.id) AS total_purchases,
+        MIN(oi.created_at) AS first_ordered_at,
+        MAX(oi.created_at) AS last_ordered_at
+      FROM
+        order_items AS oi
+        INNER JOIN products AS p ON oi.product_id = p.id
+      GROUP BY
+        oi.product_id,
+        p.name
+      ORDER BY
+        total_purchases DESC NULLS LAST
+      LIMIT
+        10
+        /* Generated by Cortex Analyst (request_id: b0182c2a-5a34-4533-859f-219811ae6384) */
+    question: "Which 10 products have been purchased the most, and when was each first and last ordered?"
+    verified_at: 1794334095
+    verified_by: sakthi9481
+    use_as_onboarding_question: false
+  - name: "\"Give me the top 10 most purchased product, with its name, id and from where the order was placed\""
+    sql: |-
+      WITH product_orders AS (
+        SELECT
+          oi.product_id,
+          p.name AS product_name,
+          u.city AS order_city,
+          u.country AS order_country,
+          COUNT(oi.id) AS purchase_count
+        FROM
+          order_items AS oi
+          INNER JOIN products AS p ON oi.product_id = p.id
+          INNER JOIN users AS u ON oi.user_id = u.id
+        GROUP BY
+          oi.product_id,
+          p.name,
+          u.city,
+          u.country
+      ),
+      product_totals AS (
+        SELECT
+          product_id,
+          product_name,
+          SUM(purchase_count) AS total_purchases
+        FROM
+          product_orders
+        GROUP BY
+          product_id,
+          product_name
+        ORDER BY
+          total_purchases DESC NULLS LAST
+        LIMIT
+          10
+      )
+      SELECT
+        po.product_id,
+        po.product_name,
+        po.order_city,
+        po.order_country,
+        po.purchase_count
+      FROM
+        product_totals AS pt
+        INNER JOIN product_orders AS po ON pt.product_id = po.product_id
+      ORDER BY
+        pt.total_purchases DESC NULLS LAST,
+        po.purchase_count DESC NULLS LAST
+        /* Generated by Cortex Analyst (request_id: b6a1896a-c6f2-4b35-89da-b2cee09d10b8) */
+    question: "Give me the top 10 most purchased product, with its name, id and from where the order was placed"
+    verified_at: 1794334169
+    verified_by: sakthi9481
+    use_as_onboarding_question: false
+  - name: '"What are the top 3 categories that were sold the most and group them by the locations"'
+    sql: |-
+      WITH category_sales AS (
+        SELECT
+          p.category,
+          u.country,
+          COUNT(oi.id) AS total_sold
+        FROM
+          order_items AS oi
+          INNER JOIN products AS p ON oi.product_id = p.id
+          INNER JOIN users AS u ON oi.user_id = u.id
+        GROUP BY
+          p.category,
+          u.country
+      ),
+      top_categories AS (
+        SELECT
+          category,
+          SUM(total_sold) AS overall_sold
+        FROM
+          category_sales
+        GROUP BY
+          category
+        ORDER BY
+          overall_sold DESC NULLS LAST
+        LIMIT
+          3
+      )
+      SELECT
+        cs.category,
+        cs.country,
+        cs.total_sold
+      FROM
+        category_sales AS cs
+        INNER JOIN top_categories AS tc ON cs.category = tc.category
+      ORDER BY
+        tc.overall_sold DESC NULLS LAST,
+        cs.category,
+        cs.total_sold DESC NULLS LAST
+        /* Generated by Cortex Analyst (request_id: 3a5bc5a9-6eb7-4d9a-ad30-7fd5453568e5) */
+    question: What are the top 3 categories that were sold the most and group them by the locations
+    verified_at: 1794334283
+    verified_by: sakthi9481
+    use_as_onboarding_question: false
