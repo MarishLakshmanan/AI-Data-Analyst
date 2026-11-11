@@ -1,0 +1,184 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  /* layout.tsx loads Geist into --font-geist-sans (this used to reference itself and fell back to the browser default) */
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* Warm neutrals: page plane < card surface, hairline borders. */
+  --background: #f6f6f3;
+  --foreground: #0b0b0b;
+  --card: #fcfcfb;
+  --card-foreground: #0b0b0b;
+  --popover: #fcfcfb;
+  --popover-foreground: #0b0b0b;
+  --primary: #256abf;
+  --primary-foreground: #ffffff;
+  --secondary: #efeee9;
+  --secondary-foreground: #1d1d1b;
+  --muted: #efeee9;
+  --muted-foreground: #5c5b56;
+  --accent: #e9f1fc;
+  --accent-foreground: #184f95;
+  --destructive: #d03b3b;
+  --border: #e4e3dc;
+  --input: #dcdbd3;
+  --ring: #3987e5;
+  --radius: 0.75rem;
+
+  /* Categorical series, fixed order (validated: adjacent CVD ΔE >= 8.4, normal-vision >= 19.3).
+     Slots 3-5 are < 3:1 on the light surface: relief = legends + the Data tab. */
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+
+  /* Chart chrome */
+  --chart-grid: #e8e7e1;
+  --chart-axis: #c3c2b7;
+  --chart-ink-muted: #898781;
+
+  /* Sequential (one hue, magnitude): near-zero recedes toward the surface. */
+  --seq-lo: #e3eefc;
+  --seq-hi: #104281;
+  --seq-ink-on-hi: #ffffff;
+  --seq-ink-on-lo: #0b0b0b;
+  /* Ordinal ramp (funnel stages): lightest step still clears 2:1 on the surface. */
+  --ord-hi: #1c5cab;
+  --ord-lo: #86b6ef;
+
+  --good: #006300;
+  --bad: #c22f2f;
+
+  --sidebar: #fcfcfb;
+  --sidebar-foreground: #0b0b0b;
+  --sidebar-primary: #256abf;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #efeee9;
+  --sidebar-accent-foreground: #1d1d1b;
+  --sidebar-border: #e4e3dc;
+  --sidebar-ring: #3987e5;
+}
+
+.dark {
+  --background: #0f0f0e;
+  --foreground: #f0efec;
+  --card: #1a1a19;
+  --card-foreground: #f0efec;
+  --popover: #1f1f1e;
+  --popover-foreground: #f0efec;
+  --primary: #3987e5;
+  --primary-foreground: #0b0b0b;
+  --secondary: #262624;
+  --secondary-foreground: #f0efec;
+  --muted: #262624;
+  --muted-foreground: #a8a79f;
+  --accent: #172a44;
+  --accent-foreground: #b7d3f6;
+  --destructive: #e66767;
+  --border: #2c2c2a;
+  --input: #383835;
+  --ring: #3987e5;
+
+  /* Same hues, stepped for the dark surface (all >= 3:1). */
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
+  --chart-3: #199e70;
+  --chart-4: #c98500;
+  --chart-5: #d55181;
+
+  --chart-grid: #2c2c2a;
+  --chart-axis: #383835;
+  --chart-ink-muted: #898781;
+
+  --seq-lo: #15263b;
+  --seq-hi: #9ec5f4;
+  --seq-ink-on-hi: #0b0b0b;
+  --seq-ink-on-lo: #f0efec;
+  --ord-hi: #9ec5f4;
+  --ord-lo: #256abf;
+
+  --good: #0ca30c;
+  --bad: #e66767;
+
+  --sidebar: #1a1a19;
+  --sidebar-foreground: #f0efec;
+  --sidebar-primary: #3987e5;
+  --sidebar-primary-foreground: #0b0b0b;
+  --sidebar-accent: #262624;
+  --sidebar-accent-foreground: #f0efec;
+  --sidebar-border: #2c2c2a;
+  --sidebar-ring: #3987e5;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Recessive chart chrome: hairline grid, muted tick labels. */
+  .recharts-cartesian-grid line {
+    stroke: var(--chart-grid);
+  }
+  .recharts-cartesian-axis-tick-value {
+    fill: var(--chart-ink-muted);
+    font-size: 11px;
+  }
+  /* Thin, unobtrusive scrollbars inside panels. */
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+}

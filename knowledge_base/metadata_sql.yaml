@@ -89,6 +89,7 @@ tables:
         expr: IP_ADDRESS
         data_type: VARCHAR(16777216)
         access_modifier: public_access
+        pii: true
         sample_values:
           - 209.46.39.95
           - 156.250.191.251
@@ -636,6 +637,7 @@ tables:
         expr: EMAIL
         data_type: VARCHAR(16777216)
         access_modifier: public_access
+        pii: true
         sample_values:
           - timothybush@example.net
           - elizabethmartinez@example.com
@@ -644,6 +646,7 @@ tables:
         expr: FIRST_NAME
         data_type: VARCHAR(16777216)
         access_modifier: public_access
+        pii: true
         sample_values:
           - Timothy
           - Elizabeth
@@ -667,6 +670,7 @@ tables:
         expr: LAST_NAME
         data_type: VARCHAR(16777216)
         access_modifier: public_access
+        pii: true
         sample_values:
           - Bush
           - Martinez
@@ -691,6 +695,7 @@ tables:
         expr: STREET_ADDRESS
         data_type: VARCHAR(16777216)
         access_modifier: public_access
+        pii: true
         sample_values:
           - 87620 Johnson Hills
           - 1705 Nielsen Land
@@ -920,4 +925,98 @@ verified_queries:
     question: What are the top 3 categories that were sold the most and group them by the locations
     verified_at: 1794334283
     verified_by: sakthi9481
+    use_as_onboarding_question: false
+  - name: "month over month order change"
+    sql: |-
+      WITH monthly AS (
+        SELECT DATE_TRUNC('month', CREATED_AT) AS month, COUNT(*) AS order_count
+        FROM LOOKER.AI.ORDERS
+        GROUP BY 1
+      )
+      SELECT
+        month,
+        order_count,
+        LAG(order_count) OVER (ORDER BY month) AS previous_month_count,
+        ROUND((order_count / NULLIF(LAG(order_count) OVER (ORDER BY month), 0) - 1) * 100, 1) AS pct_change
+      FROM monthly
+      ORDER BY month DESC
+      LIMIT 12
+    question: How have monthly orders changed compared with the previous month?
+    verified_by: drafted by Claude (executed successfully; not yet human-reviewed)
+    use_as_onboarding_question: false
+  - name: "latest month vs previous month revenue"
+    sql: |-
+      WITH monthly AS (
+        SELECT DATE_TRUNC('month', CREATED_AT) AS month, SUM(SALE_PRICE) AS revenue
+        FROM LOOKER.AI.ORDER_ITEMS
+        WHERE STATUS NOT IN ('Cancelled', 'Returned')
+        GROUP BY 1
+      )
+      SELECT revenue AS current_revenue, previous_revenue
+      FROM (
+        SELECT month, revenue, LAG(revenue) OVER (ORDER BY month) AS previous_revenue
+        FROM monthly
+      )
+      QUALIFY ROW_NUMBER() OVER (ORDER BY month DESC) = 1
+    question: How does revenue in the latest month compare to the previous month?
+    verified_by: drafted by Claude (executed successfully; not yet human-reviewed)
+    use_as_onboarding_question: false
+  - name: "browsing to purchase funnel"
+    sql: |-
+      WITH s AS (
+        SELECT
+          SESSION_ID,
+          MAX(IFF(EVENT_TYPE = 'product', 1, 0)) AS viewed_product,
+          MAX(IFF(EVENT_TYPE = 'cart', 1, 0)) AS added_to_cart,
+          MAX(IFF(EVENT_TYPE = 'purchase', 1, 0)) AS purchased
+        FROM LOOKER.AI.EVENTS
+        GROUP BY SESSION_ID
+      )
+      SELECT * FROM (
+        SELECT '1. Viewed a product' AS stage, COUNT_IF(viewed_product = 1) AS sessions FROM s
+        UNION ALL
+        SELECT '2. Added to cart', COUNT_IF(viewed_product = 1 AND added_to_cart = 1) FROM s
+        UNION ALL
+        SELECT '3. Purchased', COUNT_IF(viewed_product = 1 AND added_to_cart = 1 AND purchased = 1) FROM s
+      )
+      ORDER BY stage
+    question: Show the funnel from viewing a product to adding it to the cart to purchasing, by sessions
+    verified_by: drafted by Claude (executed successfully; not yet human-reviewed)
+    use_as_onboarding_question: false
+  - name: "monthly signup cohort retention"
+    sql: |-
+      WITH cohorts AS (
+        SELECT ID AS user_id, DATE_TRUNC('month', CREATED_AT) AS cohort_month
+        FROM LOOKER.AI.USERS
+      ),
+      recent AS (
+        SELECT DATEADD('month', -11, MAX(cohort_month)) AS first_month FROM cohorts
+      ),
+      sizes AS (
+        SELECT cohort_month, COUNT(*) AS cohort_size FROM cohorts GROUP BY 1
+      ),
+      activity AS (
+        SELECT DISTINCT USER_ID, DATE_TRUNC('month', CREATED_AT) AS activity_month
+        FROM LOOKER.AI.ORDERS
+      ),
+      active AS (
+        SELECT
+          c.cohort_month,
+          DATEDIFF('month', c.cohort_month, a.activity_month) AS months_since_signup,
+          COUNT(DISTINCT c.user_id) AS active_users
+        FROM cohorts AS c
+        JOIN activity AS a ON a.USER_ID = c.user_id
+        WHERE a.activity_month >= c.cohort_month
+        GROUP BY 1, 2
+      )
+      SELECT
+        a.cohort_month,
+        a.months_since_signup,
+        ROUND(a.active_users / s.cohort_size * 100, 1) AS retention_pct
+      FROM active AS a
+      JOIN sizes AS s ON s.cohort_month = a.cohort_month
+      WHERE a.cohort_month >= (SELECT first_month FROM recent) AND a.months_since_signup <= 11
+      ORDER BY 1, 2
+    question: What is the monthly order retention of each signup cohort over the first 12 months?
+    verified_by: drafted by Claude (executed successfully; not yet human-reviewed)
     use_as_onboarding_question: false

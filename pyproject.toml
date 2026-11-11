@@ -5,5 +5,16 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "fastapi[standard]>=0.162.4",
     "pydantic-ai>=2.66.0",
+    "python-dotenv>=1.2.4",
+    "pyyaml>=6.0.3",
+    "snowflake-connector-python>=5.2.0",
+    "sqlglot>=30.31.0",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
 ]

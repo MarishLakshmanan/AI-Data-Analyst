@@ -8,3 +8,14 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Secrets
+.env
+
+# RSA keys
+rsa_key*
+*.p8
+*.pem
+evals/reports/
+data/
+secrets/

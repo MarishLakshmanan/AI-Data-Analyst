@@ -1,0 +1,38 @@
+# Usage on the VPS:
+#   cp .env.example .env   # fill in OPENROUTER_* and SNOWFLAKE_*
+#   mkdir -p secrets && cp /path/to/rsa_key.p8 secrets/rsa_key.p8
+#   docker compose up -d --build
+#
+# Only the web dashboard is published (port 3000, bound to localhost by default).
+# Put a reverse proxy (Caddy/nginx) with TLS in front of it. The API is internal-only.
+services:
+  api:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Key lives in the mounted secret, not the repo-relative path from .env
+      SNOWFLAKE_PRIVATE_KEY_PATH: /run/secrets/rsa_key.p8
+      APP_DB_PATH: /app/data/app.db
+    volumes:
+      - app-data:/app/data
+      - ./secrets/rsa_key.p8:/run/secrets/rsa_key.p8:ro
+    expose:
+      - "8000"
+
+  web:
+    build: ./web
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      PY_API_URL: http://api:8000
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?set OPENROUTER_API_KEY in .env}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-anthropic/claude-haiku-4.5}
+    ports:
+      # Change to "3000:3000" to expose directly without a reverse proxy
+      - "${WEB_BIND:-127.0.0.1}:3000:3000"
+
+volumes:
+  app-data:
